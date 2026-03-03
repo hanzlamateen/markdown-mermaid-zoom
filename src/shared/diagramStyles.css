@@ -1,0 +1,170 @@
+@import '@vscode/codicons/dist/codicon.css';
+
+/* ---- Wrapper ---- */
+.mermaid-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: border-color 0.2s ease-in-out;
+  margin-bottom: 1em;
+}
+
+.mermaid-wrapper:hover,
+.mermaid-wrapper:focus,
+.mermaid-wrapper:focus-within {
+  border-color: var(--vscode-editorWidget-border);
+}
+
+.mermaid-content {
+  transform-origin: 0 0;
+}
+
+/* ---- Zoom Controls ---- */
+.mermaid-zoom-controls {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  width: auto;
+  gap: 2px;
+  z-index: 100;
+  background: var(--vscode-editorWidget-background);
+  border: 1px solid var(--vscode-editorWidget-border, transparent);
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.mermaid-zoom-controls-auto-hide {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.mermaid-wrapper:hover .mermaid-zoom-controls-auto-hide,
+.mermaid-wrapper:focus .mermaid-zoom-controls-auto-hide,
+.mermaid-wrapper:focus-within .mermaid-zoom-controls-auto-hide {
+  opacity: 1;
+}
+
+.mermaid-zoom-controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: transparent;
+  color: var(--vscode-icon-foreground);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mermaid-zoom-controls button:hover {
+  background: var(--vscode-toolbar-hoverBackground);
+}
+
+.mermaid-zoom-controls button.active {
+  background: var(--vscode-toolbar-activeBackground);
+  color: var(--vscode-focusBorder);
+}
+
+/* ---- Resize Handle ---- */
+.mermaid-resize-handle {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  cursor: ns-resize;
+  background: transparent;
+  z-index: 50;
+}
+
+.mermaid-resize-handle::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  background: var(--vscode-editorWidget-border, rgba(128, 128, 128, 0.4));
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+  transition-delay: 0s;
+}
+
+.mermaid-resize-handle:hover::after {
+  opacity: 1;
+  transition-delay: 0.3s;
+}
+
+/* ---- Fullscreen Overlay ---- */
+.mermaid-fullscreen-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--vscode-editor-background, #1e1e1e);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mermaid-fullscreen-overlay .mermaid-fullscreen-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 8px 12px;
+  gap: 4px;
+  background: var(--vscode-editorWidget-background);
+  border-bottom: 1px solid var(--vscode-editorWidget-border, transparent);
+  flex-shrink: 0;
+}
+
+.mermaid-fullscreen-overlay .mermaid-fullscreen-toolbar button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  color: var(--vscode-icon-foreground);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mermaid-fullscreen-overlay .mermaid-fullscreen-toolbar button:hover {
+  background: var(--vscode-toolbar-hoverBackground);
+}
+
+.mermaid-fullscreen-overlay .mermaid-fullscreen-toolbar button.active {
+  background: var(--vscode-toolbar-activeBackground);
+  color: var(--vscode-focusBorder);
+}
+
+.mermaid-fullscreen-body {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.mermaid-fullscreen-content {
+  transform-origin: 0 0;
+}
+
+/* ---- Error Display ---- */
+.mermaid-error {
+  color: var(--vscode-errorForeground, #f44747);
+  background: var(--vscode-inputValidation-errorBackground, rgba(255, 0, 0, 0.1));
+  border: 1px solid var(--vscode-inputValidation-errorBorder, #f44747);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}

@@ -1,0 +1,165 @@
+{
+  "name": "markdown-mermaid-zoom",
+  "version": "0.1.0",
+  "displayName": "Markdown Mermaid Zoom",
+  "description": "Adds Mermaid diagram support with zoom, pan, and fullscreen to VS Code's built-in markdown preview",
+  "icon": "docs/logo.png",
+  "keywords": [
+    "mermaid",
+    "markdown",
+    "flowchart",
+    "diagram",
+    "zoom",
+    "fullscreen",
+    "preview",
+    "mermaidjs"
+  ],
+  "publisher": "hanzlamateen",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hanzlamateen/markdown-mermaid-zoom.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hanzlamateen/markdown-mermaid-zoom/issues"
+  },
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "activationEvents": [],
+  "main": "./dist/index.js",
+  "categories": [
+    "Other"
+  ],
+  "contributes": {
+    "markdown.previewScripts": [
+      "./dist-preview/index.bundle.js"
+    ],
+    "markdown.markdownItPlugins": true,
+    "configuration": {
+      "title": "Markdown Mermaid Zoom",
+      "properties": {
+        "markdownMermaidZoom.lightModeTheme": {
+          "order": 0,
+          "type": "string",
+          "enum": [
+            "base",
+            "forest",
+            "dark",
+            "default",
+            "neutral"
+          ],
+          "default": "default",
+          "description": "Default Mermaid theme for light mode."
+        },
+        "markdownMermaidZoom.darkModeTheme": {
+          "order": 1,
+          "type": "string",
+          "enum": [
+            "base",
+            "forest",
+            "dark",
+            "default",
+            "neutral"
+          ],
+          "default": "dark",
+          "description": "Default Mermaid theme for dark mode."
+        },
+        "markdownMermaidZoom.languages": {
+          "order": 2,
+          "type": "array",
+          "default": [
+            "mermaid"
+          ],
+          "description": "Language identifiers used to identify Mermaid code blocks in markdown."
+        },
+        "markdownMermaidZoom.maxTextSize": {
+          "order": 3,
+          "type": "number",
+          "default": 50000,
+          "description": "Maximum allowed size of the diagram text."
+        },
+        "markdownMermaidZoom.mouseNavigation": {
+          "order": 4,
+          "type": "string",
+          "enum": [
+            "always",
+            "alt",
+            "never"
+          ],
+          "default": "alt",
+          "markdownEnumDescriptions": [
+            "Always enable mouse navigation on mermaid diagrams.",
+            "Only enable mouse navigation when holding `alt` (`option` on Mac). Pinch-to-zoom still works without `alt`.",
+            "Disable mouse navigation."
+          ],
+          "description": "Controls when mouse-based navigation (panning and zooming) is enabled."
+        },
+        "markdownMermaidZoom.controls.show": {
+          "order": 5,
+          "type": "string",
+          "enum": [
+            "never",
+            "onHoverOrFocus",
+            "always"
+          ],
+          "enumDescriptions": [
+            "Never show controls.",
+            "Show controls when hovering over or focusing on a diagram.",
+            "Always show controls."
+          ],
+          "default": "onHoverOrFocus",
+          "description": "When to show navigation control buttons on diagrams."
+        },
+        "markdownMermaidZoom.fullscreen": {
+          "order": 6,
+          "type": "boolean",
+          "default": true,
+          "description": "Enable the fullscreen toggle button on diagrams."
+        },
+        "markdownMermaidZoom.resizable": {
+          "order": 7,
+          "type": "boolean",
+          "default": true,
+          "description": "Allow diagrams to be resized vertically by dragging the bottom edge."
+        },
+        "markdownMermaidZoom.maxHeight": {
+          "order": 8,
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Maximum height for diagrams. Can be a number (pixels) or a CSS value like `80vh` or `400px`. Leave empty for no limit."
+        }
+      }
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.0",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.75.0",
+    "@vscode/codicons": "^0.0.36",
+    "@vscode/test-electron": "^2.4.0",
+    "@vscode/vsce": "^3.0.0",
+    "esbuild": "^0.24.0",
+    "eslint": "^9.0.0",
+    "mermaid": "^11.4.0",
+    "mocha": "^10.0.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.5.0",
+    "typescript-eslint": "^8.0.0"
+  },
+  "scripts": {
+    "build-preview": "node ./build/esbuild-preview.ts",
+    "watch-preview": "node ./build/esbuild-preview.ts --watch",
+    "compile-ext": "node ./build/esbuild-extension.ts",
+    "watch-ext": "node ./build/esbuild-extension.ts --watch",
+    "package-ext": "node ./build/esbuild-extension.ts --production",
+    "build": "npm-run-all package-ext build-preview",
+    "vscode:prepublish": "npm-run-all package-ext build-preview",
+    "lint": "eslint src",
+    "pretest": "npm run compile-ext && npm run compile-tests",
+    "test": "node ./out-test/test/runTests.js",
+    "compile-tests": "tsc -p ./test/tsconfig.json"
+  }
+}

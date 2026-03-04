@@ -15,6 +15,8 @@ function getTheme(): string {
   return isDark ? cfg.darkModeTheme : cfg.lightModeTheme;
 }
 
+type MermaidTheme = 'default' | 'base' | 'dark' | 'forest' | 'neutral';
+
 async function renderDiagrams(
   elements: HTMLElement[],
   theme: string,
@@ -22,7 +24,7 @@ async function renderDiagrams(
 ): Promise<void> {
   mermaid.initialize({
     startOnLoad: false,
-    theme: theme as any,
+    theme: theme as MermaidTheme,
     maxTextSize,
   });
 

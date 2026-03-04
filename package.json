@@ -1,6 +1,6 @@
 {
   "name": "markdown-mermaid-zoom",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "displayName": "Markdown Mermaid Zoom",
   "description": "Adds Mermaid diagram support with zoom, pan, and fullscreen to VS Code's built-in markdown preview",
   "icon": "docs/logo.png",

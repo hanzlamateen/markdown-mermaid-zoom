@@ -1,11 +1,12 @@
-import esbuild, { type BuildOptions, type Plugin } from 'esbuild';
+import esbuild from 'esbuild';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const srcDir = path.join(import.meta.dirname, '..', 'src');
-const distPreviewDir = path.join(import.meta.dirname, '..', 'dist-preview');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const srcDir = path.join(__dirname, '..', 'src');
+const distPreviewDir = path.join(__dirname, '..', 'dist-preview');
 
-// Plugin to bundle CSS files and export as a JS string
-const cssTextPlugin: Plugin = {
+const cssTextPlugin = {
 	name: 'css-text',
 	setup(build) {
 		build.onLoad({ filter: /\.css$/ }, async (args) => {
@@ -29,7 +30,7 @@ const cssTextPlugin: Plugin = {
 	},
 };
 
-const sharedOptions: BuildOptions = {
+const sharedOptions = {
 	bundle: true,
 	minify: true,
 	sourcemap: false,
@@ -42,14 +43,10 @@ const sharedOptions: BuildOptions = {
 	plugins: [cssTextPlugin],
 };
 
-async function build(options: BuildOptions) {
-	await esbuild.build(options);
-}
-
 async function main() {
 	const isWatch = process.argv.includes('--watch');
 
-	const previewOptions: BuildOptions = {
+	const previewOptions = {
 		...sharedOptions,
 		entryPoints: {
 			'index.bundle': path.join(srcDir, 'preview', 'index.ts'),
@@ -63,7 +60,7 @@ async function main() {
 		await ctx.watch();
 		console.log('Watching preview for changes...');
 	} else {
-		await build(previewOptions);
+		await esbuild.build(previewOptions);
 	}
 }
 

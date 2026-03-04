@@ -154,11 +154,11 @@
     "typescript-eslint": "^8.0.0"
   },
   "scripts": {
-    "build-preview": "node ./build/esbuild-preview.ts",
-    "watch-preview": "node ./build/esbuild-preview.ts --watch",
-    "compile-ext": "node ./build/esbuild-extension.ts",
-    "watch-ext": "node ./build/esbuild-extension.ts --watch",
-    "package-ext": "node ./build/esbuild-extension.ts --production",
+    "build-preview": "node ./build/esbuild-preview.mjs",
+    "watch-preview": "node ./build/esbuild-preview.mjs --watch",
+    "compile-ext": "node ./build/esbuild-extension.mjs",
+    "watch-ext": "node ./build/esbuild-extension.mjs --watch",
+    "package-ext": "node ./build/esbuild-extension.mjs --production",
     "build": "npm-run-all package-ext build-preview",
     "vscode:prepublish": "npm-run-all package-ext build-preview",
     "lint": "eslint src",

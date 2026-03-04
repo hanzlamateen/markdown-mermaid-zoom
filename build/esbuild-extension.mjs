@@ -1,31 +1,29 @@
-import esbuild, { type BuildOptions } from 'esbuild';
+import esbuild from 'esbuild';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const srcDir = path.join(import.meta.dirname, '..', 'src');
-const distDir = path.join(import.meta.dirname, '..', 'dist');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const srcDir = path.join(__dirname, '..', 'src');
+const distDir = path.join(__dirname, '..', 'dist');
 
-const sharedOptions: BuildOptions = {
+const sharedOptions = {
 	bundle: true,
 	external: ['vscode'],
 	sourcemap: true,
 };
 
-async function build(options: BuildOptions) {
-	await esbuild.build(options);
-}
-
 async function main() {
 	const isWatch = process.argv.includes('--watch');
 	const isProduction = process.argv.includes('--production');
 
-	const extensionOptions: BuildOptions = {
+	const extensionOptions = {
 		...sharedOptions,
 		entryPoints: [path.join(srcDir, 'extension', 'index.ts')],
 		outfile: path.join(distDir, 'index.js'),
 		format: 'cjs',
 		platform: 'node',
 		minify: isProduction,
-		sourcemap: isProduction ? false : true,
+		sourcemap: !isProduction,
 	};
 
 	if (isWatch) {
@@ -33,7 +31,7 @@ async function main() {
 		await ctx.watch();
 		console.log('Watching extension for changes...');
 	} else {
-		await build(extensionOptions);
+		await esbuild.build(extensionOptions);
 	}
 }
 

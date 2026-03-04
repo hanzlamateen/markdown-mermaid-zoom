@@ -11,7 +11,7 @@ const markerLen = markerStr.length;
 /**
  * Extends markdown-it to parse mermaid diagrams.
  *
- * Mermaid code fences are converted to <div class="mermaid"> elements.
+ * Mermaid code fences are converted to <pre class="mermaid"> elements.
  * Actual rendering is done in the preview webview.
  */
 export function extendMarkdownItWithMermaid(
@@ -135,7 +135,7 @@ export function extendMarkdownItWithMermaid(
     ) => {
       const token = tokens[idx];
       const src = token.content;
-      return `<div class="mermaid">${preProcess(src)}</div>`;
+      return mermaidDiv(src);
     };
   });
 
@@ -152,7 +152,7 @@ export function extendMarkdownItWithMermaid(
       'i'
     );
     if (lang && reg.test(lang)) {
-      return `<div class="mermaid">${preProcess(code)}</div>`;
+      return mermaidDiv(code);
     }
     return highlight?.(code, lang, attrs) ?? code;
   };
@@ -160,13 +160,23 @@ export function extendMarkdownItWithMermaid(
   return md;
 }
 
-function preProcess(source: string): string {
+/**
+ * Wraps mermaid source in a <pre> element with the source stored
+ * in a data attribute for reliable extraction in the preview.
+ * Starts with <pre to prevent markdown-it from adding its own wrapper.
+ */
+function mermaidDiv(source: string): string {
+  const cleaned = source.replace(/\n+$/, '').trimStart();
+  const encoded = encodeURIComponent(cleaned);
+  return `<pre class="mermaid" data-mermaid-source="${encoded}">${escapeHtml(cleaned)}</pre>`;
+}
+
+function escapeHtml(source: string): string {
   return source
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/\n+$/, '')
-    .trimStart();
+    .replace(/"/g, '&quot;');
 }
 
 function escapeRegExp(s: string): string {

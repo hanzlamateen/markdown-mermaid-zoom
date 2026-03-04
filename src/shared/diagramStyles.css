@@ -1,5 +1,16 @@
 @import '@vscode/codicons/dist/codicon.css';
 
+/* ---- Mermaid Container Reset ---- */
+pre.mermaid {
+  white-space: normal;
+  font-family: inherit;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  overflow: visible;
+}
+
 /* ---- Wrapper ---- */
 .mermaid-wrapper {
   position: relative;
@@ -29,7 +40,7 @@
   display: flex;
   width: auto;
   gap: 2px;
-  z-index: 100;
+  z-index: 10;
   background: var(--vscode-editorWidget-background);
   border: 1px solid var(--vscode-editorWidget-border, transparent);
   border-radius: 6px;
@@ -106,7 +117,7 @@
 .mermaid-fullscreen-overlay {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: 99999;
   background: var(--vscode-editor-background, #1e1e1e);
   display: flex;
   flex-direction: column;

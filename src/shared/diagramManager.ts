@@ -37,14 +37,16 @@ export class DiagramManager {
     this.diagramStyleSheet = document.createElement('style');
     this.diagramStyleSheet.className = 'markdown-style mermaid-diagram-styles';
     this.diagramStyleSheet.textContent = diagramStyles;
-    document.head.appendChild(this.diagramStyleSheet);
+    this.ensureStyleSheetAttached();
   }
 
   public updateConfig(config: MermaidExtensionConfig): void {
     this.config = config;
+    this.ensureStyleSheetAttached();
   }
 
   public setup(id: string, mermaidContainer: HTMLElement): IDisposable {
+    this.ensureStyleSheetAttached();
     this.disposeInstance(id);
     const parent = mermaidContainer.parentNode;
     if (!parent) {
@@ -85,6 +87,18 @@ export class DiagramManager {
       if (!activeIds.has(id)) {
         this.savedStates.delete(id);
       }
+    }
+  }
+
+  private ensureStyleSheetAttached(): void {
+    if (!document.head) {
+      return;
+    }
+    if (!this.diagramStyleSheet.isConnected) {
+      document.head.appendChild(this.diagramStyleSheet);
+    }
+    if (!this.diagramStyleSheet.textContent) {
+      this.diagramStyleSheet.textContent = diagramStyles;
     }
   }
 }
@@ -269,9 +283,9 @@ export class DiagramElement {
   private enterFullscreen(): void {
     if (this.isFullscreen) return;
     this.isFullscreen = true;
-    this.fsScale = 1;
-    this.fsTranslate = { x: 0, y: 0 };
-    this.fullscreenPanMode = false;
+    this.fsScale = this.scale;
+    this.fsTranslate = { ...this.translate };
+    this.fullscreenPanMode = this.panModeEnabled;
 
     this.fullscreenOverlay = document.createElement('div');
     this.fullscreenOverlay.className = 'mermaid-fullscreen-overlay';
@@ -300,6 +314,10 @@ export class DiagramElement {
 
     const signal = this.abortController.signal;
     this.fullscreenPanModeBtn = toolbar.querySelector('.fs-pan-mode-btn');
+    if (this.fullscreenPanMode) {
+      this.fullscreenPanModeBtn?.classList.add('active');
+      body.style.cursor = 'grab';
+    }
     this.fullscreenPanModeBtn?.addEventListener('click', (e) => {
       e.preventDefault(); e.stopPropagation();
       this.fullscreenPanMode = !this.fullscreenPanMode;
@@ -324,6 +342,16 @@ export class DiagramElement {
   private exitFullscreen(): void {
     if (!this.isFullscreen) return;
     this.isFullscreen = false;
+
+    // Carry fullscreen zoom/pan state back to inline view
+    this.scale = this.fsScale;
+    this.translate = { ...this.fsTranslate };
+    this.hasInteracted = true;
+    if (this.panModeEnabled !== this.fullscreenPanMode) {
+      this.togglePanMode();
+    }
+    this.applyTransform();
+
     if (this.fullscreenOverlay) {
       this.fullscreenOverlay.remove();
       this.fullscreenOverlay = null;
@@ -452,7 +480,7 @@ export class DiagramElement {
 
   private handleWheel(e: WheelEvent): void {
     const isPinchZoom = e.ctrlKey;
-    if (isPinchZoom || e.altKey) {
+    if (isPinchZoom || e.altKey || this.panModeEnabled) {
       e.preventDefault(); e.stopPropagation();
       const rect = this.container.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;

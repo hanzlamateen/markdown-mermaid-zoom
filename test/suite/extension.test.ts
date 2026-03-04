@@ -14,23 +14,25 @@ suite('Markdown-It Mermaid Plugin', () => {
     });
   });
 
-  test('should render mermaid code fence as div.mermaid', () => {
+  test('should render mermaid code fence as pre.mermaid', () => {
     const input = '```mermaid\ngraph TD;\n    A-->B;\n```';
     const result = md.render(input);
-    assert.ok(result.includes('<div class="mermaid">'), 'Should contain mermaid div');
+    assert.ok(result.includes('<pre class="mermaid"'), 'Should contain mermaid pre');
+    assert.ok(result.includes('data-mermaid-source='), 'Should contain data-mermaid-source attribute');
     assert.ok(result.includes('A--&gt;B;'), 'Should contain escaped diagram content');
   });
 
-  test('should render ::: mermaid block as div.mermaid', () => {
+  test('should render ::: mermaid block as pre.mermaid', () => {
     const input = '::: mermaid\ngraph TD;\n    A-->B;\n:::';
     const result = md.render(input);
-    assert.ok(result.includes('<div class="mermaid">'), 'Should contain mermaid div');
+    assert.ok(result.includes('<pre class="mermaid"'), 'Should contain mermaid pre');
+    assert.ok(result.includes('data-mermaid-source='), 'Should contain data-mermaid-source attribute');
   });
 
   test('should not affect non-mermaid code fences', () => {
     const input = '```javascript\nconsole.log("hello");\n```';
     const result = md.render(input);
-    assert.ok(!result.includes('<div class="mermaid">'), 'Should not contain mermaid div');
+    assert.ok(!result.includes('class="mermaid"'), 'Should not contain mermaid class');
   });
 
   test('should support custom language IDs', () => {
@@ -40,7 +42,7 @@ suite('Markdown-It Mermaid Plugin', () => {
     });
     const input = '```mmd\ngraph TD;\n    A-->B;\n```';
     const result = customMd.render(input);
-    assert.ok(result.includes('<div class="mermaid">'), 'Should render custom language ID');
+    assert.ok(result.includes('<pre class="mermaid"'), 'Should render custom language ID');
   });
 
   test('should escape HTML entities in diagram content', () => {
@@ -48,6 +50,15 @@ suite('Markdown-It Mermaid Plugin', () => {
     const result = md.render(input);
     assert.ok(!result.includes('<script>'), 'Should not contain raw script tag');
     assert.ok(result.includes('&lt;script&gt;'), 'Should contain escaped script tag');
+  });
+
+  test('should encode source in data-mermaid-source attribute', () => {
+    const input = '```mermaid\npie title "Test"\n    "A" : 100\n```';
+    const result = md.render(input);
+    const match = result.match(/data-mermaid-source="([^"]*)"/);
+    assert.ok(match, 'Should have data-mermaid-source attribute');
+    const decoded = decodeURIComponent(match![1]);
+    assert.ok(decoded.startsWith('pie title'), 'Decoded source should start with diagram type');
   });
 });
 
@@ -82,8 +93,12 @@ suite('Mermaid Diagram Type Fixtures', () => {
       const content = fs.readFileSync(filePath, 'utf-8');
       const result = md.render(content);
       assert.ok(
-        result.includes('<div class="mermaid">'),
-        `${fixture} should produce a mermaid div`
+        result.includes('<pre class="mermaid"'),
+        `${fixture} should produce a mermaid pre element`
+      );
+      assert.ok(
+        result.includes('data-mermaid-source='),
+        `${fixture} should have data-mermaid-source attribute`
       );
     });
   }

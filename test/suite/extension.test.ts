@@ -63,7 +63,7 @@ suite('Markdown-It Mermaid Plugin', () => {
 });
 
 suite('Mermaid Diagram Type Fixtures', () => {
-  const fixturesDir = path.resolve(__dirname, '../../test/fixtures');
+  const fixturesDir = path.resolve(__dirname, '../../../test/fixtures');
   let md: MarkdownIt;
 
   setup(() => {

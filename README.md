@@ -221,7 +221,7 @@ This project includes GitHub Actions for automated publishing to both the **VS C
 1. Go to [Open VSX](https://open-vsx.org/) and sign in with your GitHub account
 2. Go to your [Access Tokens](https://open-vsx.org/user-settings/tokens) page
 3. Click **Generate New Token**
-4. Give it a description (e.g., `github-actions`) and click **Generate**
+4. Give it a description (e.g., `ovsx-publish`) and click **Generate**
 5. Copy the token (you will not be able to see it again)
 
 ### 4. Add Secrets to GitHub

@@ -4,6 +4,10 @@
   "displayName": "Markdown Mermaid Zoom",
   "description": "Adds Mermaid diagram support with zoom, pan, and fullscreen to VS Code's built-in markdown preview",
   "icon": "docs/logo.png",
+  "galleryBanner": {
+    "color": "#0D7378",
+    "theme": "dark"
+  },
   "keywords": [
     "mermaid",
     "markdown",
@@ -14,7 +18,7 @@
     "preview",
     "mermaidjs"
   ],
-  "publisher": "hanzlamateen",
+  "publisher": "EchEmLabs",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -29,7 +33,7 @@
   "activationEvents": [],
   "main": "./dist/index.js",
   "categories": [
-    "Other"
+    "Visualization"
   ],
   "contributes": {
     "markdown.previewScripts": [

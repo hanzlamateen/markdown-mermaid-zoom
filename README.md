@@ -240,6 +240,34 @@ vsce package
 vsce publish
 ```
 
+## Troubleshooting
+
+### Diagrams fail to render after switching files
+
+If diagrams render correctly the first time but show errors like **"No diagram type detected"** on subsequent previews, you most likely have a **conflicting Mermaid extension** installed.
+
+**Known conflicting extensions:**
+
+| Extension | Identifier |
+|-----------|------------|
+| Mermaid Chart | `mermaidchart.vscode-mermaid-chart` |
+| Markdown Preview Mermaid Support | `bierner.markdown-mermaid` |
+
+These extensions inject their own Mermaid.js instance into the same markdown preview webview. Two Mermaid instances running in the same webview corrupt each other's internal diagram detector registry, causing renders to fail after a few previews.
+
+**Fix:** Disable or uninstall the conflicting extension. Only one Mermaid preview extension should be active at a time.
+
+To check which extensions might conflict:
+
+1. Open the Command Palette (`Ctrl+Shift+P`)
+2. Run **"Extensions: Show Installed Extensions"**
+3. Search for `mermaid`
+4. Disable any other Mermaid-related preview extensions
+
+### Controls (zoom/pan/fullscreen) not appearing
+
+If diagrams render but the control buttons are missing, ensure the setting `markdownMermaidZoom.controls.show` is not set to `"never"`. The default value `"onHoverOrFocus"` shows controls when you hover over a diagram.
+
 ## Contributing
 
 1. Fork the repository

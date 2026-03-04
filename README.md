@@ -2,6 +2,8 @@
 
 Adds [Mermaid](https://mermaid.js.org/) diagram and flowchart support with **zoom**, **pan**, and **fullscreen** capabilities to VS Code's built-in Markdown preview.
 
+Also available on the [Open VSX Registry](https://open-vsx.org/extension/EchEmLabs/markdown-mermaid-zoom) for **Cursor**, **VS Codium**, and other compatible editors.
+
 All functionality runs entirely client-side inside the VS Code webview -- no server or external services required.
 
 ## Features
@@ -27,10 +29,28 @@ Flowchart, Sequence, Gantt, Class, State, Pie, Entity Relationship, Mindmap, Git
 3. Search for **"Markdown Mermaid Zoom"**
 4. Click **Install**
 
+### From Open VSX (Cursor / VS Codium)
+
+The extension is published to the [Open VSX Registry](https://open-vsx.org/extension/EchEmLabs/markdown-mermaid-zoom), so it can be installed directly from the extension marketplace in **Cursor**, **VS Codium**, and other editors that use Open VSX.
+
+1. Open the Extensions view (`Ctrl+Shift+X` / `Cmd+Shift+X`)
+2. Search for **"Markdown Mermaid Zoom"**
+3. Click **Install**
+
+Or install from the command line:
+
+```bash
+# Cursor
+cursor --install-extension EchEmLabs.markdown-mermaid-zoom
+
+# VS Codium
+codium --install-extension EchEmLabs.markdown-mermaid-zoom
+```
+
 ### From VSIX
 
 1. Download the `.vsix` file from the [GitHub Releases](https://github.com/hanzlamateen/markdown-mermaid-zoom/releases) page
-2. In VS Code, open the Command Palette (`Ctrl+Shift+P`) and run **Extensions: Install from VSIX...**
+2. In VS Code (or Cursor / VS Codium), open the Command Palette (`Ctrl+Shift+P`) and run **Extensions: Install from VSIX...**
 3. Select the downloaded `.vsix` file
 
 ## Usage
@@ -173,18 +193,18 @@ build/              esbuild build scripts
 test/               Test suite and fixtures
 ```
 
-## Publishing to VS Code Marketplace
+## Publishing
 
-This project includes GitHub Actions for automated publishing. Here is how to set it up:
+This project includes GitHub Actions for automated publishing to both the **VS Code Marketplace** and the **Open VSX Registry** (used by Cursor, VS Codium, etc.).
 
-### 1. Create a Publisher Account
+### 1. Create a VS Code Marketplace Publisher Account
 
 1. Go to the [Visual Studio Marketplace Publisher Management](https://marketplace.visualstudio.com/manage) page
 2. Sign in with your Microsoft account (or create one)
 3. Click **Create Publisher** and fill in the details
 4. Note your **publisher ID** -- update the `"publisher"` field in `package.json` to match
 
-### 2. Create a Personal Access Token (PAT)
+### 2. Create a VS Code Marketplace Personal Access Token (PAT)
 
 1. Go to [Azure DevOps](https://dev.azure.com/) and sign in
 2. Click on your profile icon (top right) and select **Personal access tokens**
@@ -196,15 +216,25 @@ This project includes GitHub Actions for automated publishing. Here is how to se
    - **Expiration**: Set as needed (max 1 year)
 5. Click **Create** and **copy the token** (you will not be able to see it again)
 
-### 3. Add the Secret to GitHub
+### 3. Create an Open VSX Access Token
+
+1. Go to [Open VSX](https://open-vsx.org/) and sign in with your GitHub account
+2. Go to your [Access Tokens](https://open-vsx.org/user-settings/tokens) page
+3. Click **Generate New Token**
+4. Give it a description (e.g., `github-actions`) and click **Generate**
+5. Copy the token (you will not be able to see it again)
+
+### 4. Add Secrets to GitHub
 
 1. Go to your GitHub repository's **Settings** > **Secrets and variables** > **Actions**
-2. Click **New repository secret**
-3. Name: `VSCE_PAT`
-4. Value: Paste the PAT you copied in step 2
-5. Click **Add secret**
+2. Add the following repository secrets:
 
-### 4. Create a Release
+| Secret Name | Value |
+|-------------|-------|
+| `VSCE_PAT` | Your VS Code Marketplace PAT (from step 2) |
+| `OVSX_PAT` | Your Open VSX access token (from step 3) |
+
+### 5. Create a Release
 
 To publish a new version:
 
@@ -220,24 +250,25 @@ The **Release** GitHub Action will automatically:
 1. Build and test the extension
 2. Package it as a `.vsix` file
 3. Publish to the VS Code Marketplace
-4. Upload the `.vsix` to GitHub Releases
+4. Publish to the Open VSX Registry
+5. Upload the `.vsix` to GitHub Releases
 
 ### Manual Publishing
 
 To publish manually without GitHub Actions:
 
 ```bash
-# Install vsce
-npm install -g @vscode/vsce
-
-# Login (paste your PAT when prompted)
-vsce login <publisher-id>
+# Install tools
+npm install -g @vscode/vsce ovsx
 
 # Package
 vsce package
 
-# Publish
-vsce publish
+# Publish to VS Code Marketplace
+vsce publish -p <your-vsce-pat>
+
+# Publish to Open VSX
+ovsx publish *.vsix -p <your-ovsx-token>
 ```
 
 ## Troubleshooting

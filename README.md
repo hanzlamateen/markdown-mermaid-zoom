@@ -6,6 +6,8 @@ Also available on the [Open VSX Registry](https://open-vsx.org/extension/EchEmLa
 
 All functionality runs entirely client-side inside the VS Code webview -- no server or external services required.
 
+![Zooming, panning and fullscreen on a Mermaid diagram in VS Code's Markdown preview](docs/demo.gif)
+
 ## Features
 
 - **Mermaid Rendering** -- Renders mermaid diagrams inline in VS Code's built-in Markdown preview
@@ -91,6 +93,8 @@ graph TD;
 - **Pinch-to-zoom** -- Use a trackpad pinch gesture
 - **Click zoom** -- `Alt+click` to zoom in, `Alt+Shift+click` to zoom out
 
+![A flowchart zoomed in, with the control bar showing](docs/screenshot.png)
+
 #### Panning
 
 - **Click and drag** -- Hold `Alt` and click-drag to pan
@@ -101,6 +105,8 @@ graph TD;
 - Click the **fullscreen** button (expand icon) in the control bar to enter fullscreen mode
 - In fullscreen, you get dedicated zoom/pan controls and a reset button
 - Press `Escape` or click the **exit fullscreen** button to return to inline view
+
+![A diagram in fullscreen mode](docs/fullscreen.png)
 
 #### Resizing
 
